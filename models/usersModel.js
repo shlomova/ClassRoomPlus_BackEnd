@@ -1,25 +1,34 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const userSchema = new mongoose.Schema({
-   name: {
+   fristName: {
+        type:String,
+        required:[true, 'The user must have a name']
+    }, 
+    lastName: {
         type:String,
         required:[true, 'The user must have a name']
     }, 
     email:{
         type:String,
-        required:[true , 'Please provide email'],
+        required:[true , 'Please provide a email'],
+        unique: true
+    },
+    phone:{
+        type:Number,
+        required:[true , 'Please provide a phone number'],
         unique: true
     },
     password:{
         type: String,
-        required:[true, 'Must be a password'],
-        minLength: 8,
+        required:[true, 'Must be a valid password'],
+        minLength: [6, 'Password must be at least 6 characters long'],
         select: false
     },
     confirmPassword:{
         type: String,
         required:[true, 'Please confirm password'],
-        minLength: 8,
+        minLength: 6,
         validate: {
            validator: function(el){
                 return el === this.password
