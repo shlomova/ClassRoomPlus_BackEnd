@@ -1,6 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const AppError = require('./../utils/AppError')
-const User = require('./../models/userModel')
+const User = require('./../models/usersModel')
 
 
 
