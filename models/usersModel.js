@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const userSchema = new mongoose.Schema({
-   fristName: {
+   firstName: {
         type:String,
         required:[true, 'The user must have a name']
     }, 
