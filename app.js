@@ -20,8 +20,8 @@ app.use(express.json());
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', usersRouter);
-app.use('/class', classRouter);
-app.use('/course', courseRouter);
+// app.use('/class', classRouter);
+app.use('/courses', courseRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
