@@ -31,9 +31,11 @@ const createSendToken = (user, statusCode, res) => {
   };
   
 exports.register = asyncHandler(async(req, res, next)=>{
-    const {email, password, confirmPassword,name} = req.body
-    if (!email ||!password||!confirmPassword) return next(new AppError(403,'Request details are missing'))
-    const newUser = await User.create({email, password, confirmPassword, name})
+  console.log('hello')
+
+    const {email, password, confirmPassword, firstName, lastName,phone,role} = req.body
+    if (!email ||!password ||!confirmPassword || !firstName || !lastName || !phone || !role) return next(new AppError(403,'Request details are missing'))
+    const newUser = await User.create({email, password, confirmPassword, firstName, lastName,phone,role})
    createSendToken(newUser, 201 , res)
 })
 
