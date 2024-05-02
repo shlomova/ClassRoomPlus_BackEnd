@@ -74,3 +74,9 @@ exports.restrictTo = (...roles) => {
     };
   };
   
+  exports.isByUser = asyncHandler(async(req, res, next)=>{
+    const {userId} = req.params
+    const user = req.user
+    if(userId !== user._id) return next(new AppError(403, 'You are not authorized to perform this action'))
+    next()
+  })
