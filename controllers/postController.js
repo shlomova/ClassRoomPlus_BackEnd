@@ -3,12 +3,11 @@ const asyncHandler = require('express-async-handler');
 
 // Create a new post
 const createPost = asyncHandler(async (req, res) => {
-    const { courseID, postData, dataType } = req.body;
-    const userId = req.user._id;
+    const { userId, courseId, postData, dataType } = req.body;
   
       const post = await Post.create({
         userId,
-        courseID,
+        courseId,
         dataType,
         postData,
       });
@@ -16,14 +15,14 @@ const createPost = asyncHandler(async (req, res) => {
       res.status(201).json({
         status: 'success',
         post
+  });
 });
-    });
 
 // Get posts by class
-const getPostsByClass = asyncHandler(async (req, res) => {
-  const { courseID } = req.params;
+const getPostsByCourse = asyncHandler(async (req, res) => {
+  const { courseId } = req.params;
 
-  const posts = await Post.find({ courseID });
+  const posts = await Post.find({ courseId });
 
   res.json({
     status: 'success',
@@ -41,4 +40,12 @@ const getPostsByUser = asyncHandler(async (req, res) => {
     posts});
 });
 
-module.exports = { createPost, getPostsByClass, getPostsByUser };
+const deletePost = asyncHandler(async (req, res, next) => {
+  const { _id } = req.params
+  await Post.findByIdAndDelete(_id)
+  res.status(201).json({
+      status: 'success',
+  })
+})
+
+module.exports = { createPost, getPostsByCourse, getPostsByUser, deletePost };

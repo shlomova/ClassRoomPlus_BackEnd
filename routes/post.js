@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authControllers = require('./../controllers/authControllers');
-const { createPost, getPostsByClass, getPostsByUser } = require('../controllers/postController');
+const { createPost, getPostsByCourse, getPostsByUser, deletePost } = require('../controllers/postController');
 
 // Route for creating a new post
 router.post('/', authControllers.protect, (req, res, next) => {
@@ -17,10 +17,12 @@ router.post('/', authControllers.protect, (req, res, next) => {
   }
 });
 
-// Route for fetching posts by class
-router.get('/class/:classId', authControllers.protect, getPostsByClass);
+// Route for fetching posts by course
+router.get('/:courseId', authControllers.protect, getPostsByCourse);
 
 // Route for fetching posts by user
-router.get('/user/:userId', authControllers.protect, getPostsByUser);
+router.get('/:userId', authControllers.protect, getPostsByUser);
+router.delete('/:postId', authControllers.isByUser, deletePost);
+
 
 module.exports = router;

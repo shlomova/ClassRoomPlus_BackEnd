@@ -1,16 +1,14 @@
 const mongoose = require('mongoose');
 
-const postSchema = new mongoose.Schema(
-  {
-  postid: { type: String, required: [true,"must have a valid id"], unique: true },
-  userId: { type: String, required:[true,"must have a valid userid"],unique: true },
-  courseId: { type: String, required:[true,"must have a valid classid"],unique: true},
+const postSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, required: [true, "Must have a valid userid"], unique: true },
+  courseId: { type: mongoose.Schema.Types.ObjectId, required: [true, "Must have a valid classid"], unique: true },
   postData: {
-    type: mongoose.Schema.Types.Mixed,
+    type: String,
     required: true,
   },
   dataType: { type: String, enum: ['string', 'emoji', 'file'], required: true },
-  createdAt: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now }
 });
 
 const Post = mongoose.model('Post', postSchema);
