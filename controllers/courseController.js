@@ -52,12 +52,13 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
 exports.subscribe = asyncHandler(async (req, res, next) => {
     const {_id} = req.params
     const {userId} = req.body
+    const {role} = req.body
     let course = await Course.findById(_id)
     const subscriptionIndex = course.subscription.findIndex(sub => sub.userId === userId);
     let update = {};
     if (subscriptionIndex !== -1) {
         update = {
-             $set: { [`subscription.${subscriptionIndex}.role`]: 'student' }
+             $set: { [`subscription.${subscriptionIndex}.role`]: role }
         };
     } else {
         update = {
