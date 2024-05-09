@@ -76,3 +76,21 @@ exports.subscribe = asyncHandler(async (req, res, next) => {
         course
     })
 })
+
+exports.subDelete = asyncHandler(async (req, res, next) => {
+    const {_id} = req.params
+    const {userId} = req.body
+    let update = {
+            $pull: { subscription: {userId} }
+        };
+
+    course = await Course.findByIdAndUpdate(
+        _id,
+        update,
+        {new: true}
+    );
+    res.status(201).json({
+        status: 'success',
+        course
+    })
+})
