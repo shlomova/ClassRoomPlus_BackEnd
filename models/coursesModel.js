@@ -1,5 +1,10 @@
 const mongoose = require('mongoose')
+const User = require("../models/usersModel");
+
 const courseSchema = new mongoose.Schema({
+    courseId: {
+        type: mongoose.Schema.ObjectId,
+    },
     courseName: {
         type: String,
         required: [true, 'The course must have a name']
@@ -17,7 +22,21 @@ const courseSchema = new mongoose.Schema({
     },
     price: {
         type: Number
-    }
+    },
+    // two-way
+    subscription: {
+        type: Array,
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
+        role: {
+            type: String,
+            value: ['teacher', 'student'],
+        }
+    },
+    userId: {type: String}
 })
 courseSchema.pre('save', async function (next) {
     if (!this.isModified('openDate') || !this.isModified('endDate'))
@@ -30,23 +49,3 @@ courseSchema.pre('save', async function (next) {
 const course = mongoose.model('course', courseSchema)
 
 module.exports = course
-
-
-function validateDates(openDate, endDate) {
-    const openDateObj = new Date(openDate);
-    const endDateObj = new Date(endDate);
-
-    if (!isValidDate(openDateObj) || !isValidDate(endDateObj)) {
-        return false;
-    }
-
-    if (endDateObj < openDateObj) {
-        return false;
-    }
-
-    return true;
-}
-
-function isValidDate(date) {
-    return !isNaN(date.getTime());
-}
