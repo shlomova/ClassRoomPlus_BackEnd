@@ -13,5 +13,6 @@ router.route('/:_id')
     .put(courseControllers.updateCourse)
     .delete(courseControllers.deleteCourse)
 
-
+router.route('/subscribe/:_id')
+    .put(courseControllers.subscribe)
 module.exports = router

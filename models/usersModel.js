@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
             values:['admin', 'user'],
             message: 'The role must be either "admin", "user"'
         },
-        default:'student'
+        default:'user'
     },
     courses:[
     {
