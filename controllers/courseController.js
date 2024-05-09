@@ -32,9 +32,9 @@ exports.getCourseByID = asyncHandler(async (req, res, next) => {
 })
 
 exports.updateCourse = asyncHandler(async (req, res, next) => {
-    const { _id } = req.params
+    const {_id} = req.params
     const updatedDetails = req.body
-    const updatedCourse = await Course.findByIdAndUpdate(_id, updatedDetails, { new: true })
+    const updatedCourse = await Course.findByIdAndUpdate(_id, updatedDetails, {new: true})
     res.status(201).json({
         status: 'success',
         updatedCourse
@@ -42,9 +42,56 @@ exports.updateCourse = asyncHandler(async (req, res, next) => {
 })
 
 exports.deleteCourse = asyncHandler(async (req, res, next) => {
-    const { _id } = req.params
+    const {_id} = req.params
     await Course.findByIdAndDelete(_id)
     res.status(201).json({
         status: 'success',
+    })
+})
+
+exports.subscribe = asyncHandler(async (req, res, next) => {
+    const {_id} = req.params
+    const {userId} = req.body
+    const {role} = req.body
+    let course = await Course.findById(_id)
+    const subscriptionIndex = course.subscription.findIndex(sub => sub.userId === userId);
+    let update = {};
+    if (subscriptionIndex !== -1) {
+        update = {
+             $set: { [`subscription.${subscriptionIndex}.role`]: role }
+        };
+    } else {
+        update = {
+            $addToSet: {
+                subscription: {userId: userId, role: undefined}
+            }
+        };
+    }
+    course = await Course.findByIdAndUpdate(
+        _id,
+        update,
+        {new: true}
+    );
+    res.status(201).json({
+        status: 'success',
+        course
+    })
+})
+
+exports.subDelete = asyncHandler(async (req, res, next) => {
+    const {_id} = req.params
+    const {userId} = req.body
+    let update = {
+            $pull: { subscription: {userId} }
+        };
+
+    course = await Course.findByIdAndUpdate(
+        _id,
+        update,
+        {new: true}
+    );
+    res.status(201).json({
+        status: 'success',
+        course
     })
 })
