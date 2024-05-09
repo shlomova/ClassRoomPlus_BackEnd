@@ -38,6 +38,25 @@ const courseSchema = new mongoose.Schema({
     },
     userId: {type: String}
 })
+courseSchema.pre("save", function (next) {
+  this.id = String(this._id);
+  next();
+});
+courseSchema.pre("save", async function (next) {
+    this.subscription = {userId: this.userId, role: 'teacher'}
+    try {
+        const filter = {_id: this.userId};
+        const update = {courses: this._id};
+        const user = await User.findOneAndUpdate(
+            filter,
+            {$push: update},
+            undefined
+        );
+        console.log(user)
+    } catch (error) {
+        console.error("Error updating user course:", error);
+    }
+});
 courseSchema.pre('save', async function (next) {
     if (!this.isModified('openDate') || !this.isModified('endDate'))
         return next()
