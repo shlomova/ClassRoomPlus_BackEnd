@@ -1,5 +1,10 @@
 const mongoose = require('mongoose')
+const User = require("../models/usersModel");
+
 const courseSchema = new mongoose.Schema({
+    courseId: {
+        type: mongoose.Schema.ObjectId,
+    },
     courseName: {
         type: String,
         required: [true, 'The course must have a name']
@@ -17,8 +22,41 @@ const courseSchema = new mongoose.Schema({
     },
     price: {
         type: Number
-    }
+    },
+    // two-way
+    subscription: {
+        type: Array,
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
+        role: {
+            type: String,
+            value: ['teacher', 'student'],
+        }
+    },
+    userId: {type: String}
 })
+courseSchema.pre("save", function (next) {
+  this.id = String(this._id);
+  next();
+});
+courseSchema.pre("save", async function (next) {
+    this.subscription = {userId: this.userId, role: 'teacher'}
+    try {
+        const filter = {_id: this.userId};
+        const update = {courses: this._id};
+        const user = await User.findOneAndUpdate(
+            filter,
+            {$push: update},
+            undefined
+        );
+        console.log(user)
+    } catch (error) {
+        console.error("Error updating user course:", error);
+    }
+});
 courseSchema.pre('save', async function (next) {
     if (!this.isModified('openDate') || !this.isModified('endDate'))
         return next()
@@ -30,23 +68,3 @@ courseSchema.pre('save', async function (next) {
 const course = mongoose.model('course', courseSchema)
 
 module.exports = course
-
-
-function validateDates(openDate, endDate) {
-    const openDateObj = new Date(openDate);
-    const endDateObj = new Date(endDate);
-
-    if (!isValidDate(openDateObj) || !isValidDate(endDateObj)) {
-        return false;
-    }
-
-    if (endDateObj < openDateObj) {
-        return false;
-    }
-
-    return true;
-}
-
-function isValidDate(date) {
-    return !isNaN(date.getTime());
-}
