@@ -1,6 +1,6 @@
 const Post = require('../models/postModel');
 const asyncHandler = require('express-async-handler');
-
+const AppError = require('./../utils/AppError');
 // Create a new post
 const createPost = asyncHandler(async (req, res) => {
     const { userId, courseId, postData, dataType } = req.body;
