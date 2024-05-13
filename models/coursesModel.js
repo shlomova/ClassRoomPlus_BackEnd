@@ -65,6 +65,6 @@ courseSchema.pre('save', async function (next) {
     next()
 })
 
-const course = mongoose.model('course', courseSchema)
+const course = mongoose.model('Course', courseSchema)
 
 module.exports = course
