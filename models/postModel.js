@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, required: [true, "Must have a valid userid"], unique: true },
-  courseId: { type: mongoose.Schema.Types.ObjectId, required: [true, "Must have a valid classid"], unique: true },
+  courseId: { type: mongoose.Schema.Types.ObjectId,  ref: "Course", required: [true, "Must have a valid classid"], unique: true },
   postData: {
     type: String,
     required: true,
