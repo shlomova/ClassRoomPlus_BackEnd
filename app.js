@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const errorHandler = require('./utils/errorHandler');
 const express = require('express');
 const path = require('path');
+const cors = require('cors')
 const cookieParser = require('cookie-parser');
 // const logger = require('morgan');
 
@@ -11,6 +12,10 @@ const courseRouter = require('./routes/course');
 
 const app = express();
 
+app.use(cors({
+  origin: true,
+  credentials: true
+}))
 app.use(express.urlencoded({ extended: true }));
 
 // view engine setup
