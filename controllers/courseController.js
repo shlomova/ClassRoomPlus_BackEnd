@@ -51,20 +51,19 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
 
 exports.subscribe = asyncHandler(async (req, res, next) => {
     const {_id} = req.params
-    const {userId} = req.body
-    const {role} = req.body
+    const userId = req.user._id
     let course = await Course.findById(_id)
     const subscriptionIndex = course.subscription.findIndex(sub => sub.userId === userId);
     let update = {};
-    if (subscriptionIndex !== -1) {
-        update = {
-             $set: { [`subscription.${subscriptionIndex}.role`]: role }
-        };
-    } else {
+    if (subscriptionIndex === -1) {
         update = {
             $addToSet: {
                 subscription: {userId: userId, role: undefined}
             }
+        };
+    } else {
+        update = {
+             $set: { [`subscription.${subscriptionIndex}.role`]: 'student' }
         };
     }
     course = await Course.findByIdAndUpdate(

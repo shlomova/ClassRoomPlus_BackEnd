@@ -6,14 +6,14 @@ const router = express.Router()
 
 router.route('/')
     .get(courseControllers.getAllCourses)
-    .post(courseControllers.addCourse)
+    .post(authControllers.protect, courseControllers.addCourse)
 
 router.route('/:_id')
-    .get(courseControllers.getCourseByID)
-    .put(courseControllers.updateCourse)
-    .delete(courseControllers.deleteCourse)
+    .get(authControllers.protect, courseControllers.getCourseByID)
+    .put(authControllers.protect, courseControllers.updateCourse)
+    .delete(authControllers.protect, courseControllers.deleteCourse)
 
 router.route('/subscribe/:_id')
-    .put(courseControllers.subscribe)
-    .delete(courseControllers.subDelete)
+    .put(authControllers.protect, courseControllers.subscribe)
+    .delete(authControllers.protect, courseControllers.subDelete)
 module.exports = router
