@@ -47,7 +47,6 @@ exports.login = asyncHandler(async (req, res, next) => {
 
 })
 const protect = asyncHandler(async (req, res, next) => {
-    console.log(req.headers.cookie);
     const token = req.headers.cookie.split('=')[1]
     if (!token) return next(new AppError(403, 'Please login '))
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)

@@ -4,9 +4,6 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors')
 const fileRouter = require('./routes/filerouts')
-const cookieParser = require('cookie-parser');
-
-
 const usersRouter = require('./routes/users');
 const postRouter = require('./routes/post');
 const courseRouter = require('./routes/course');
@@ -34,7 +31,7 @@ app.use('/posts', postRouter);
 app.use('/courses', courseRouter);
 app.use('/files', fileRouter)
 
-app.use(express.static('Files/files'))
+app.use(express.static('Files'))
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
 
