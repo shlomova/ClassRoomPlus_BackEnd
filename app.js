@@ -3,8 +3,9 @@ const errorHandler = require('./utils/errorHandler');
 const express = require('express');
 const path = require('path');
 const cors = require('cors')
+const fileRouter = require('./routes/filerouts')
 const cookieParser = require('cookie-parser');
-// const logger = require('morgan');
+
 
 const usersRouter = require('./routes/users');
 const postRouter = require('./routes/post');
@@ -31,7 +32,9 @@ app.use(express.json());
 app.use('/users', usersRouter);
 app.use('/posts', postRouter);
 app.use('/courses', courseRouter);
+app.use('/files', fileRouter)
 
+app.use(express.static('Files/files'))
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
 
