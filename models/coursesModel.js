@@ -36,12 +36,15 @@ const courseSchema = new mongoose.Schema({
             value: ['teacher', 'student'],
         }
     },
-    userId: {type: String}
+    userId: {type: String},
+
 })
+
 courseSchema.pre("save", function (next) {
   this.id = String(this._id);
   next();
 });
+
 courseSchema.pre("save", async function (next) {
     this.subscription = {userId: this.userId, role: 'teacher'}
     try {

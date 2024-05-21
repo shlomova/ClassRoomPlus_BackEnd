@@ -1,10 +1,15 @@
 const Post = require('../models/postModel');
 const asyncHandler = require('express-async-handler');
 const AppError = require('./../utils/AppError');
+const fs = require('fs');
 
 // Create a new post
 const createPost = asyncHandler(async (req, res) => {
-  const { userId, courseId, postData, dataType } = req.body;
+  let {courseId, postData, dataType } = req.body;
+  const userId = req.user._id;
+  if (dataType === 'file'){
+    postData = req.file.path;
+  }
 
   const post = await Post.create({
     userId,
@@ -21,7 +26,7 @@ const createPost = asyncHandler(async (req, res) => {
 
 // get all posts by a user
 const getPostsByUser = asyncHandler(async (req, res) => {
-  console.log(req.params);
+  // console.log(req.params);
   const { userId } = req.params;
   const posts = await Post.find({ userId });
   res.json({
@@ -61,6 +66,13 @@ const deletePost = asyncHandler(
     return next(new AppError(403, 'You are not authorized to perform this action'));
   }
   
+    if (post.dataType === 'file') {
+      fs.unlink(post.postData, (err) => {
+        if (err) {
+          return next(new AppError(500, err.message));
+        }
+      });
+    }
     await post.deleteOne();
     console.log('post')
 
