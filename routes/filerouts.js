@@ -1,5 +1,5 @@
 const express = require('express')
-const { createFile, getFilesByCourse, getFile, deleteFile } = require('../controllers/fileControllers.js')
+const { createFileInCourse, getFilesByCourse, getFile, deleteFile } = require('../controllers/fileControllers.js')
 const upload = require('../utils/upload')
 const multer = require('multer')
 const path = require('path')
@@ -8,11 +8,11 @@ const authControllers = require('./../controllers/authControllers');
 const router = express.Router()
 
 
-router.route('/')
-    .post(authControllers.protect, upload.single('file'), createFile)
+// router.route('/')
 
 router.route('/course/:courseId')
-    .get( authControllers.protect, getFilesByCourse)
+    .post(authControllers.protect, upload.single('file'), createFileInCourse)
+    .get( authControllers.protect,authControllers.restrictTo('admin'), getFilesByCourse)
 
 router.route('/:fileId')
     .get(authControllers.protect, getFile)
