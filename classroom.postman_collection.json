@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "a4a9639b-4005-4d79-9154-921d26e99420",
+		"_postman_id": "cba102b5-2cf7-417e-a283-4300497e4e92",
 		"name": "classroom",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33739529"
+		"_exporter_id": "32127735"
 	},
 	"item": [
 		{
@@ -15,14 +15,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/courses",
+							"raw": "http://localhost:3000/courses/",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
-								"courses"
+								"courses",
+								""
 							]
 						}
 					},
@@ -35,7 +36,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"courseName\": \"math\",\r\n    \"openDate\": \"2024-12-01\",\r\n    \"endDate\": \"2024-12-31\",\r\n    \"userId\": \"663ca6a7a855895aab2765c9\"\r\n}",
+							"raw": "{\r\n    \"courseName\": \"math2\",\r\n    \"openDate\": \"2024-12-01\",\r\n    \"endDate\": \"2024-12-31\",\r\n    \"description\": \"math\",\r\n    \"price\": 232,\r\n    \"userId\": \"663ca6a7a855895aab2765c9\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -71,7 +72,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/courses/6630ee9c48ccd72b94d46875",
+							"raw": "http://localhost:3000/courses/663664c95b27ad15c7412216696",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -79,7 +80,7 @@
 							"port": "3000",
 							"path": [
 								"courses",
-								"6630ee9c48ccd72b94d46875"
+								"663664c95b27ad15c7412216696"
 							]
 						}
 					},
@@ -91,7 +92,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/courses/66334738a515419c0cfa8230",
+							"raw": "http://localhost:3000/courses/664c95b27ad15c7412216696",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -99,7 +100,7 @@
 							"port": "3000",
 							"path": [
 								"courses",
-								"66334738a515419c0cfa8230"
+								"664c95b27ad15c7412216696"
 							]
 						}
 					},
@@ -182,7 +183,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"moshe@example.com\",\r\n  \"password\": \"password123\"\r\n}",
+							"raw": "{\r\n  \"email\": \"nadav@example.com\",\r\n  \"password\": \"password123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -215,7 +216,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/courses/subscribe/663cbfb002b2c44598fd9154",
+							"raw": "http://localhost:3000/courses/subscribe/664c95b27ad15c7412216696",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -224,7 +225,7 @@
 							"path": [
 								"courses",
 								"subscribe",
-								"663cbfb002b2c44598fd9154"
+								"664c95b27ad15c7412216696"
 							]
 						}
 					},
@@ -245,7 +246,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/courses/subscribe/663cbfb002b2c44598fd9154",
+							"raw": "http://localhost:3000/courses/subscribe/664c95b27ad15c7412216696",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -254,7 +255,7 @@
 							"path": [
 								"courses",
 								"subscribe",
-								"663cbfb002b2c44598fd9154"
+								"664c95b27ad15c7412216696"
 							]
 						}
 					},
@@ -314,7 +315,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:3000/files/course/asdfsadfss",
+							"raw": "http://localhost:3000/files/course/66337654e8cf2f33f1d7facb",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -323,7 +324,7 @@
 							"path": [
 								"files",
 								"course",
-								"asdfsadfss"
+								"66337654e8cf2f33f1d7facb"
 							]
 						}
 					},
@@ -335,7 +336,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/files/asdfsafdsafdsf",
+							"raw": "http://localhost:3000/files/664c77b01bff14de1f696d19",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -343,7 +344,7 @@
 							"port": "3000",
 							"path": [
 								"files",
-								"asdfsafdsafdsf"
+								"664c77b01bff14de1f696d19"
 							]
 						}
 					},
@@ -360,19 +361,21 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "postman-cloud:///1ef169cf-77b0-4ac0-ac2b-671eaeb550a6"
+									"src": "postman-cloud:///1ef175b1-8e9e-4820-bd5a-8beba38a1f4a"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://localhost:3000/files",
+							"raw": "http://localhost:3000/files/course/663cc8f54b8ca4e92c006a00",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
-								"files"
+								"files",
+								"course",
+								"663cc8f54b8ca4e92c006a00"
 							]
 						}
 					},
@@ -384,7 +387,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/files/asdfsadfsafsdfsafsafsdf",
+							"raw": "http://localhost:3000/files/664c94df7ad15c7412216691",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -392,7 +395,122 @@
 							"port": "3000",
 							"path": [
 								"files",
-								"asdfsadfsafsdfsafsafsdf"
+								"664c94df7ad15c7412216691"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "posts",
+			"item": [
+				{
+					"name": "getPosts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/posts/course/663cc8f54b8ca4e92c006a00",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts",
+								"course",
+								"663cc8f54b8ca4e92c006a00"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deletePost",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/posts/664c914ea93ffad1b454cf79",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts",
+								"664c914ea93ffad1b454cf79"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "newPost",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"courseId\": \"663c90c90be64d6fedd22f2e\",\r\n  \"postData\": \"This is a sample post\",\r\n  \"dataType\": \"string\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/posts/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "newPostWithFile",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "courseId",
+									"value": "663c90c90be64d6fedd22f2e",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "postman-cloud:///1ef175b1-8e9e-4820-bd5a-8beba38a1f4a"
+								},
+								{
+									"key": "dataType",
+									"value": "file",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/posts/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"posts",
+								""
 							]
 						}
 					},
