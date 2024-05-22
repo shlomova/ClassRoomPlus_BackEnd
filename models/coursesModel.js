@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const User = require("../models/usersModel");
-
 const courseSchema = new mongoose.Schema({
     courseId: {
         type: mongoose.Schema.ObjectId,
@@ -42,9 +41,8 @@ const courseSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Post",
         },
-        userId: {type: String},
-    
     },
+    userId: {type: String},
 
 })
 
