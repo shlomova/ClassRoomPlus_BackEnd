@@ -29,11 +29,12 @@ const createSendToken = (user, statusCode, res) => {
         }
     });
 };
-
 exports.register = asyncHandler(async (req, res, next) => {
     const {email, password, confirmPassword, firstName, lastName, phone, role} = req.body
     if (!email || !password || !confirmPassword || !firstName || !lastName || !phone || !role) return next(new AppError(403, 'Request details are missing'))
-    const newUser = await User.create({email, password, confirmPassword, firstName, lastName, phone, role})
+    const newUser = await User.create({email, password, confirmPassword, firstName, lastName, phone, role}).catch(err => {
+        return next(new AppError(403, 'Email or Phone already exists'))
+    })
     createSendToken(newUser, 201, res)
 })
 
@@ -60,7 +61,7 @@ const protect = asyncHandler(async (req, res, next) => {
 
 exports.restrictTo = (...role) => {
     return async (req, res, next) => {
-        if (role !== req.user.role) {
+        if (!role.includes(req.user.role)) {
             return next(
                 new AppError(403, 'You do not have permission to perform this action')
             );
