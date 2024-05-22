@@ -36,7 +36,15 @@ const courseSchema = new mongoose.Schema({
             value: ['teacher', 'student'],
         }
     },
-    userId: {type: String},
+    contents: {
+        type: Array,
+        posts: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Post",
+        },
+        userId: {type: String},
+    
+    },
 
 })
 
