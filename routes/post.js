@@ -6,7 +6,7 @@ const upload = require('./../utils/upload');
 
 // Route for creating a new post
 router.post('/', authControllers.protect, 
-  upload.single('file'),
+  upload.array('files'),
   createPost);
 
 // Route for fetching posts by course
