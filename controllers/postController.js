@@ -5,34 +5,31 @@ const AppError = require('./../utils/AppError');
 const fs = require('fs');
 
 // Create a new post
-const createPost = asyncHandler(async (req, res) => {
-  let {courseId, postData } = req.body;
-  const userId = req.user._id;
-  let postFiles = null;
-  if (req.files)
-    postFiles = req.files.map(file => file.path);
+const createPost = asyncHandler(async (req, res, next) => {
     let {courseId, postData} = req.body;
     let userId = req.user._id;
-    const course = await Course.findById(courseId);
+    let course = await Course.findById(courseId);
     if (!course) {
         return next(new AppError(404, 'Course not found'));
     }
-    const subscription = course.subscription.find(sub => sub.userId.toString() === req.user._id.toString());
-    const role = subscription ? subscription.role : null;
-
-    if (role !== 'teacher' && (role === null || (role === 'student' && post.userId.toString() !== req.user._id.toString()))) {
-        return next(new AppError(403, 'You are not authorized to perform this action'));
+    const subscription = course.subscription.find(sub => sub.userId.toString() === userId.toString());
+    if (!subscription) {
+        return next(new AppError(403, 'You are not in this course'));
     }
+    if (subscription.role === 'teacher')
+        userId = null;
     let postFiles = null;
     if (req.files)
         postFiles = req.files.map(file => file.path);
-
     const post = await Post.create({
         userId,
         courseId,
         postFiles,
         postData,
     });
+
+    if (userId === null)
+        await Course.findByIdAndUpdate(courseId, {$push: {contents: post._id}}, {new: true})
 
     res.status(201).json({
         status: 'success',

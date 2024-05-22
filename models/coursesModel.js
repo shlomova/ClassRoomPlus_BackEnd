@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const User = require("../models/usersModel");
-
 const courseSchema = new mongoose.Schema({
     courseId: {
         type: mongoose.Schema.ObjectId,
@@ -36,8 +35,10 @@ const courseSchema = new mongoose.Schema({
             value: ['teacher', 'student'],
         }
     },
+    contents: {
+        type: Array,
+        posts: { type: mongoose.Schema.Types.ObjectId, ref: "Post"}, },
     userId: {type: String},
-
 })
 
 courseSchema.pre("save", function (next) {
