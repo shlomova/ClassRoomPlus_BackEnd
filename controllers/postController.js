@@ -1,4 +1,5 @@
 const Post = require('../models/postModel');
+const Course = require('../models/coursesModel');
 const asyncHandler = require('express-async-handler');
 const AppError = require('./../utils/AppError');
 const fs = require('fs');
@@ -10,78 +11,94 @@ const createPost = asyncHandler(async (req, res) => {
   let postFiles = null;
   if (req.files)
     postFiles = req.files.map(file => file.path);
+    let {courseId, postData} = req.body;
+    let userId = req.user._id;
+    const course = await Course.findById(courseId);
+    if (!course) {
+        return next(new AppError(404, 'Course not found'));
+    }
+    const subscription = course.subscription.find(sub => sub.userId.toString() === req.user._id.toString());
+    const role = subscription ? subscription.role : null;
 
-  const post = await Post.create({
-    userId,
-    courseId,
-    postFiles,
-    postData,
-  });
+    if (role !== 'teacher' && (role === null || (role === 'student' && post.userId.toString() !== req.user._id.toString()))) {
+        return next(new AppError(403, 'You are not authorized to perform this action'));
+    }
+    let postFiles = null;
+    if (req.files)
+        postFiles = req.files.map(file => file.path);
 
-  res.status(201).json({ 
-    status: 'success',
-    post
-  });
+    const post = await Post.create({
+        userId,
+        courseId,
+        postFiles,
+        postData,
+    });
+
+    res.status(201).json({
+        status: 'success',
+        post
+    });
 });
 
 // get all posts by a user
 const getPostsByUser = asyncHandler(async (req, res) => {
-  // console.log(req.params);
-  const { userId } = req.params;
-  const posts = await Post.find({ userId });
-  res.json({
-    status: 'success',
-    posts
-  });
-}
+        // console.log(req.params);
+        const {userId} = req.params;
+        const posts = await Post.find({userId});
+        res.json({
+            status: 'success',
+            posts
+        });
+    }
 );
 // get all posts by a course
 const getPostsByCourse = asyncHandler(async (req, res) => {
-  const { courseId } = req.params;
+        const {courseId} = req.params;
 
-  const posts = await Post.find({ courseId });
+        const posts = await Post.find({courseId});
 
-  res.json({
-    status: 'success',
-    posts
-  });
-}
+        res.json({
+            status: 'success',
+            posts
+        });
+    }
 );
 
 
 // Delete a post
-const deletePost = asyncHandler(
+const deletePost = asyncHandler(async (req, res, next) => {
+    const {postId} = req.params;
 
-  async (req, res,next) => {
-    const { postId } = req.params;
-
-    
     const post = await Post.findById(postId);
     if (!post) {
-      return next(new AppError(404, 'Post not found'));
+        return next(new AppError(404, 'Post not found'));
     }
-    const {userId} = post;;
-  
-  if (req.user.role === 'user' && userId.toString() !== req.user._id.toString()) {
-    return next(new AppError(403, 'You are not authorized to perform this action'));
-  }
-  
+
+    const course = await Course.findById(post.courseId);
+    if (!course) {
+        return next(new AppError(404, 'Course not found'));
+    }
+    const subscription = course.subscription.find(sub => sub.userId.toString() === req.user._id.toString());
+    const role = subscription ? subscription.role : null;
+
+    if (role !== 'teacher' && (role === null || (role === 'student' && post.userId.toString() !== req.user._id.toString()))) {
+        return next(new AppError(403, 'You are not authorized to perform this action'));
+    }
+
     if (post.dataType === 'file') {
-      fs.unlink(post.postData, (err) => {
-        if (err) {
-          return next(new AppError(500, err.message));
-        }
-      });
+        fs.unlink(post.postData, (err) => {
+            if (err) {
+                return next(new AppError(500, err.message));
+            }
+        });
     }
+
     await post.deleteOne();
-    console.log('post')
 
     res.json({
-      status: 'success',
-      message: 'Post deleted'
+        status: 'success',
+        message: 'Post deleted'
     });
-  }
-);
+});
 
-
-module.exports = { createPost, getPostsByCourse, getPostsByUser, deletePost };
+module.exports = {createPost, getPostsByCourse, getPostsByUser, deletePost};
