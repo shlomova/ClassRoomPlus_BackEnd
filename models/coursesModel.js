@@ -37,8 +37,13 @@ const courseSchema = new mongoose.Schema({
     },
     contents: {
         type: Array,
-        posts: { type: mongoose.Schema.Types.ObjectId, ref: "Post"}, },
+        posts: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Post",
+        },
+    },
     userId: {type: String},
+
 })
 
 courseSchema.pre("save", function (next) {
