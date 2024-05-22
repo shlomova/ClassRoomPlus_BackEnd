@@ -51,8 +51,11 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
 
 exports.subscribe = asyncHandler(async (req, res, next) => {
     const {_id} = req.params
-    const userId = req.user._id
+    let userId = req.user._id;
     let course = await Course.findById(_id)
+    if (req.user.role === 'teacher') {
+        userId = req.body.userId;
+    }
     const subscriptionIndex = course.subscription.findIndex(sub => sub.userId === userId);
     let update = {};
     if (subscriptionIndex === -1) {
