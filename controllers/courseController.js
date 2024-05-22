@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Course = require("../models/coursesModel");
 const User = require("../models/usersModel")
-
+const Post = require("../models/postModel")
 exports.getAllCourses = asyncHandler(async (req, res, next) => {
     const courses = await Course.find()
     res.status(200).json({
@@ -44,9 +44,22 @@ exports.updateCourse = asyncHandler(async (req, res, next) => {
 
 exports.deleteCourse = asyncHandler(async (req, res, next) => {
     const {_id} = req.params
+    let role = req.user.role
+    const course = await Course.findById(_id)
+    const subscription = course.subscription.find(sub => sub.userId.toString() === req.user._id.toString());
+    if (role !== 'admin' && subscription.role !== 'teacher') {
+        res.status(403).json({
+            status: 'fail',
+            message: 'You are not authorized to delete this course'
+        })
+    }
     await Course.findByIdAndDelete(_id)
-    res.status(201).json({
+
+    await Post.find({courseId: _id}).deleteMany()
+    await User.find({courses: _id}).updateMany({$pull: {courses: _id}})
+    res.status(204).json({
         status: 'success',
+        data: null
     })
 })
 
