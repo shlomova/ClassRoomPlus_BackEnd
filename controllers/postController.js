@@ -5,16 +5,16 @@ const fs = require('fs');
 
 // Create a new post
 const createPost = asyncHandler(async (req, res) => {
-  let {courseId, postData, dataType } = req.body;
+  let {courseId, postData } = req.body;
   const userId = req.user._id;
-  if (dataType === 'file'){
-    postData = req.file.path;
-  }
+  let postFiles = null;
+  if (req.files)
+    postFiles = req.files.map(file => file.path);
 
   const post = await Post.create({
     userId,
     courseId,
-    dataType,
+    postFiles,
     postData,
   });
 

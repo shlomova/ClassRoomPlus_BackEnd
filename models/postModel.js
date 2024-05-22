@@ -7,7 +7,7 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  dataType: { type: String, enum: ['string', 'emoji', 'file'], required: true },
+  postFiles: {type: Array, files: {type: String}},
   createdAt: { type: Date, default: Date.now }
 });
 
