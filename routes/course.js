@@ -10,7 +10,7 @@ router.route('/')
 
 router.route('/:_id')
     .get(authControllers.protect, courseControllers.getCourseByID)
-    .put(authControllers.protect, courseControllers.updateCourse)
+    .put(authControllers.protect, authControllers.restrictTo('teacher') ,courseControllers.updateCourse)
     .delete(authControllers.protect, courseControllers.deleteCourse)
 
 router.route('/subscribe/:_id')
