@@ -7,6 +7,7 @@ const fileRouter = require('./routes/filerouts')
 const usersRouter = require('./routes/users');
 const postRouter = require('./routes/post');
 const courseRouter = require('./routes/course');
+const approveStudent = require('./routes/mail')
 
 const app = express();
 
@@ -25,7 +26,7 @@ app.use(express.json());
 // app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
-
+app.use('/approveStudent', approveStudent)
 app.use('/users', usersRouter);
 app.use('/posts', postRouter);
 app.use('/courses', courseRouter);
@@ -34,7 +35,7 @@ app.use('/files', fileRouter)
 app.use(express.static('Files'))
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-
+app.use()
   next(createError(404));
 });
 
