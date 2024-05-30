@@ -32,6 +32,7 @@ const createSendToken = (user, statusCode, res) => {
 exports.register = asyncHandler(async (req, res, next) => {
     const {email, password, confirmPassword, firstName, lastName, phone, role} = req.body
     if (!email || !password || !confirmPassword || !firstName || !lastName || !phone || !role) return next(new AppError(403, 'Request details are missing'))
+    // if (!uesr.validtion === false) return next(new AppError(403, 'Please validate your email'))
     const newUser = await User.create({email, password, confirmPassword, firstName, lastName, phone, role}).catch(err => {
         return next(new AppError(403, 'Email or Phone already exists'))
     })
@@ -42,10 +43,50 @@ exports.login = asyncHandler(async (req, res, next) => {
     const {email, password} = req.body
     if (!email || !password) return next(new AppError(403, 'Email or password is missing'))
     const user = await User.findOne({email}).select('+password')
-    if (!user || !await user.checkPassword(password, user.password)) return next(new AppError(403, 'Email or password is not correct 1'))
-
+    if (!user || !await user.checkPassword(password, user.password)) return next(new AppError(403, 'Email or password is not valid'))
+    // if (!uesr.validtion === false) return next(new AppError(403, 'Please validate your email'))
     createSendToken(user, 201 , res)
 
+})
+
+exports.logout = asyncHandler(async (req, res, next) => {
+    res.cookie('jwt', 'loggedout', {
+        expires: new Date(Date.now() + 10 * 1000),
+        httpOnly: true
+    });
+    res.status(200).json({status: 'success'})
+})
+
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+    const {email} = req.body
+    if (!email) return next(new AppError(403, 'Email is missing'))
+    const user = await User
+        .findOne({email})
+    if (!user) return next(new AppError(403, 'Email is not valid'))
+    const resetToken = user.createPasswordResetToken()
+    await user.save({validateBeforeSave: false})
+    res.status(200).json({
+        status: 'success',
+        resetToken
+    })
+})
+
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+    const {token} = req.params
+    const {password, confirmPassword} = req.body
+    if (!token || !password || !confirmPassword) return next(new AppError(403, 'Request details are missing'))
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex')
+    const user = await User.findOne({
+        passwordResetToken: hashedToken,
+        passwordResetExpires: {$gt: Date.now()}
+    })
+    if (!user) return next(new AppError(403, 'Token is invalid or has expired'))
+    user.password = password
+    user.confirmPassword = confirmPassword
+    user.passwordResetToken = undefined
+    user.passwordResetExpires = undefined
+    await user.save()
+    createSendToken(user, 200, res)
 })
 const protect = asyncHandler(async (req, res, next) => {
     const token = req.headers.cookie.split('=')[1]
@@ -66,6 +107,7 @@ exports.restrictTo = (...role) => {
                 new AppError(403, 'You do not have permission to perform this action')
             );
         }
+        next();
     };
 };
 
