@@ -61,18 +61,27 @@ courseSchema.pre("save", async function (next) {
             {$push: update},
             undefined
         );
-        console.log(user)
+        // console.log(user)
     } catch (error) {
         console.error("Error updating user course:", error);
     }
 });
-courseSchema.pre('save', async function (next) {
-    if (!this.isModified('openDate') || !this.isModified('endDate'))
-        return next()
-    if (this.endDate < this.openDate)
-        return next(new Error('End date cannot be earlier than open date'));
-    next()
-})
+
+courseSchema.pre("save", async function (next) {
+    try {
+        const filter = {_id: this.userId};
+        const update = {courses: this._id};
+        const user = await User.findOneAndUpdate(
+            filter,
+            {$push: update},
+            undefined
+        );
+        // console.log(user)
+    } catch (error) {
+        console.error("Error updating user course:", error);
+    }
+}   );
+
 
 const course = mongoose.model('Course', courseSchema)
 
