@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Course = require("../models/coursesModel");
 const User = require("../models/usersModel")
 const Post = require("../models/postModel")
+const SendMailToTeacher = require("./mailControllers.js")
 exports.getAllCourses = asyncHandler(async (req, res, next) => {
     const courses = await Course.find()
     res.status(200).json({
@@ -16,7 +17,7 @@ exports.addCourse = asyncHandler(async (req, res, next) => {
     // Create a new course directly using Course.create()
     const newCourse = await Course.create(courseData);
 
-    // Send response
+
     res.status(201).json({
         status: 'success',
         course: newCourse
@@ -24,18 +25,26 @@ exports.addCourse = asyncHandler(async (req, res, next) => {
 });
 
 exports.getCourseByID = asyncHandler(async (req, res, next) => {
-    const {_id} = req.params
-    const courses = await Course.findOne({_id})
+    const { _id } = req.params
+    console.log(req.user)
+    const course = await Course.findById(_id)
+    .populate('subscription.userId','firstName lastName')
+    console.log(course)
     res.status(200).json({
         status: 'success',
-        courses
+        course
     })
 })
 
+
+
+
+
+
 exports.updateCourse = asyncHandler(async (req, res, next) => {
-    const {_id} = req.params
+    const { _id } = req.params
     const updatedDetails = req.body
-    const updatedCourse = await Course.findByIdAndUpdate(_id, updatedDetails, {new: true})
+    const updatedCourse = await Course.findByIdAndUpdate(_id, updatedDetails, { new: true })
     res.status(201).json({
         status: 'success',
         updatedCourse
@@ -44,18 +53,18 @@ exports.updateCourse = asyncHandler(async (req, res, next) => {
 
 exports.deleteCourse = asyncHandler(async (req, res, next) => {
     const {_id} = req.params
-    let role = req.user.role
+    // let role = req.user.role
     const course = await Course.findById(_id)
-    const subscription = course.subscription.find(sub => sub.userId.toString() === req.user._id.toString());
-    if (role !== 'admin' && subscription.role !== 'teacher') {
+    const subscription = course.subscription.find(sub => sub.userId === req.user._id.toString());
+    if (course.subscription.role !== 'teacher') {
         res.status(403).json({
             status: 'fail',
             message: 'You are not authorized to delete this course'
         })
     }
     await Course.findByIdAndDelete(_id)
-
     await Post.find({courseId: _id}).deleteMany()
+
     await User.find({courses: _id}).updateMany({$pull: {courses: _id}})
     res.status(204).json({
         status: 'success',
@@ -70,37 +79,52 @@ const updateCourseAndUser = async (courseId, userId, courseUpdate, userUpdate) =
 };
 
 exports.subscribe = asyncHandler(async (req, res, next) => {
-    const { _id } = req.params;
+    const { _id: courseId } = req.params;
     let userId = req.user._id;
-    if (req.user.role === 'teacher') {
-        userId = req.body.userId;
+
+    const isExist = req.user.courses.findIndex(courseId => courseId.toString() == courseId)
+
+    if (isExist !== -1) {
+        res.status(403).json({
+            status: 'fail',
+            message: 'You are already subscribed to this course'
+        });
+        return
     }
-
-    const course = await Course.findById(_id);
+    if (req.user.role === 'teacher') {
+        _Id = req.body.userId;
+    }
+    const course = await Course.findById(courseId);
+    // console.log({
+    //     // subscriptionIndex,
+    //     course   });
     const subscriptionIndex = course.subscription.findIndex(sub => sub.userId === userId);
-    const courseUpdate = subscriptionIndex === -1
-        ? { $addToSet: { subscription: { userId: userId, role: undefined } } }
-        : { $set: { [`subscription.${subscriptionIndex}.role`]: 'student' } };
+    if (subscriptionIndex === -1) {
 
-    const userUpdate = { $push: { courses: _id } };
+    }
+    const courseUpdate = { $addToSet: { subscription: { userId: userId.toString(), role: null } } }
 
-    const { course: updatedCourse, user } = await updateCourseAndUser(_id, userId, courseUpdate, userUpdate);
+    const userUpdate = { $push: { courses: courseId } };
+
+    const { course: updatedCourse, user } = await updateCourseAndUser(courseId, userId, courseUpdate, userUpdate);
+    
+    SendMailToTeacher.SendMailToTeacher(req, res)
 
     res.status(201).json({
         status: 'success',
         course: updatedCourse,
-        user
+
     });
 });
 
 exports.subDelete = asyncHandler(async (req, res, next) => {
-    const { _id } = req.params;
+    const { _id ,} = req.params;
     let userId = req.user._id;
     if (req.user.role === 'teacher') {
         userId = req.body.userId;
     }
 
-    const courseUpdate = { $pull: { subscription: { userId } } };
+    const courseUpdate = { $pull: { subscription: { _id, } } };
     const userUpdate = { $pull: { courses: _id } };
 
     const { course, user } = await updateCourseAndUser(_id, userId, courseUpdate, userUpdate);
