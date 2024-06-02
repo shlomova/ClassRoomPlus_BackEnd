@@ -3,6 +3,7 @@ const dotenv = require('dotenv')
 const app = require("./app");
 const connectDB = require('./utils/connectDB')
 
+
 dotenv.config()
 
 connectDB(process.env.MONGO_DB_LOCAL)
