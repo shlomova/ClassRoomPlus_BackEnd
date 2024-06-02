@@ -75,6 +75,7 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
 const updateCourseAndUser = async (courseId, userId, courseUpdate, userUpdate) => {
     const course = await Course.findByIdAndUpdate(courseId, courseUpdate, { new: true });
     const user = await User.findByIdAndUpdate(userId, userUpdate, { new: true });
+   
     return { course, user };
 };
 
@@ -118,20 +119,25 @@ exports.subscribe = asyncHandler(async (req, res, next) => {
 });
 
 exports.subDelete = asyncHandler(async (req, res, next) => {
-    const { _id ,} = req.params;
+    const { _id} = req.params;
     let userId = req.user._id;
     if (req.user.role === 'teacher') {
         userId = req.body.userId;
     }
-
-    const courseUpdate = { $pull: { subscription: { _id, } } };
+    // to remove the course from the user's courses array
+    // to remove the user from the course's subscription array
+    const courseUpdate = { $pull: { subscription: { userId: userId.toString() } } };
     const userUpdate = { $pull: { courses: _id } };
+  
+   
+    
+    await updateCourseAndUser(_id, userId, courseUpdate, userUpdate);
+    
 
-    const { course, user } = await updateCourseAndUser(_id, userId, courseUpdate, userUpdate);
 
     res.status(201).json({
         status: 'success',
-        course,
-        user
+        message: 'Unsubscribed successfully'
+       
     });
 });

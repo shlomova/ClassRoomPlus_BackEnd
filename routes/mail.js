@@ -6,7 +6,7 @@ const approveStudent =  require('./../utils/sendmailtoteacher')
 
 
 
-router.route('/approvestudent').put( approveStudent.approveStudent)
+router.route('/approvestudent').put(authControllers.protect, approveStudent.approveStudent)
 
 
 module.exports = router
