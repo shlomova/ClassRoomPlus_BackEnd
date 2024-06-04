@@ -3,6 +3,7 @@ const AppError = require('./../utils/AppError')
 const User = require('./../models/usersModel')
 const {promisify} = require('util')
 const jwt = require('jsonwebtoken')
+const verification = require('../controllers/verificationController');
 
 const signToken = id => {
     return jwt.sign({id, iat: Date.now()}, process.env.JWT_SECRET, {
@@ -30,13 +31,42 @@ const createSendToken = (user, statusCode, res) => {
     });
 };
 exports.register = asyncHandler(async (req, res, next) => {
-    const {email, password, confirmPassword, firstName, lastName, phone, role} = req.body
-    if (!email || !password || !confirmPassword || !firstName || !lastName || !phone || !role) return next(new AppError(403, 'Request details are missing'))
-    const newUser = await User.create({email, password, confirmPassword, firstName, lastName, phone, role}).catch(err => {
-        return next(new AppError(403, 'Email or Phone already exists'))
-    })
-    createSendToken(newUser, 201, res)
-})
+    const { email, password, confirmPassword, firstName, lastName, phone, role } = req.body;
+
+    // בדיקת שדות רשומים
+    if (!email || !password || !confirmPassword || !firstName || !lastName || !phone || !role) {
+        return next(new AppError(403, 'Request details are missing'));
+    }
+
+    // בדיקה אם המשתמש כבר אומת את המייל שלו
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+        if (!existingUser.verify) {
+            if (existingUser.phone === phone) {
+                await verification.sendVerification(req, res);
+                return next(new AppError(403, 'Please verify the email'));
+            } else {
+                return next(new AppError(403, 'Email already exists and is not verified, but the phone number does not match'));
+            }
+        } else {
+            return next(new AppError(403, 'Email already exists and is verified'));
+        }
+    }
+
+    // יצירת המשתמש
+    const newUser = await User.create({ email, password, confirmPassword, firstName, lastName, phone, role }).catch(err => {
+        return next(new AppError(403, 'Email or Phone already exists'));
+    });
+
+    // שליחת מייל אימות
+    await verification.sendVerification(req, res);
+
+    // שליחת תגובה עם טוקן
+    createSendToken(newUser, 201, res);
+});
+
+
 
 exports.login = asyncHandler(async (req, res, next) => {
     const {email, password} = req.body
