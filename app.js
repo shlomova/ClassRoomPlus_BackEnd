@@ -8,6 +8,9 @@ const postRouter = require('./routes/post');
 const courseRouter = require('./routes/course');
 const mailRouter = require('./routes/mail')
 const admonRouter = require('./routes/admon.js')
+// const chatRouter = require('./servises/chatbot/chatroute.js')
+// const bodyParser = require('body-parser');
+const chatbotRoutes = require('./servises/chatroute.js')
 const app = express();
 
 app.use(cors({
@@ -23,6 +26,8 @@ app.use('/users', usersRouter);
 app.use('/posts', postRouter);
 app.use('/courses', courseRouter);
 app.use('/files', fileRouter)
+app.use('/chatbot', chatbotRoutes);
+
 
 app.use(express.static('Files'))
 app.use(function(req, res, next) {
