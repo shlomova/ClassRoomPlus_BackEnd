@@ -1,9 +1,9 @@
 const chatbotData = {
-  id:"start",
-  greeting: "Welcome to the Classroom Chatbot! How can I assist you today?",
+  
   questions: [
     {
       id: 1,
+      greeting: "Welcome to the Classroom Chatbot! How can I assist you today?",
       text: "Are you a student or a teacher?",
       options: [
         {
@@ -25,7 +25,7 @@ const chatbotData = {
         {
           id: 3,
           text: "Join a course",
-          url: "/courses/join"
+          url: "/courses/subscriptions"
         },
         {
           id: 4,

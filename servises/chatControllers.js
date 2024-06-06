@@ -6,10 +6,7 @@ const chatbotData = require('./chatdb');
 // Function to get a question by its ID
 const getQuestionById = (id) => {
   const questionDataArray = Object.values(chatbotData);
-console.log('questionDataArray', questionDataArray);
-console.log(id);
   const questionData = chatbotData.questions.find(question => question.id== id);
-  console.log('questionData', questionData);
   
   if (!questionData) {
     console.warn(`No question found with ID ${id}`);
@@ -17,8 +14,6 @@ console.log(id);
   
   return questionData;
 };
-
-
 
 const getQuestion = asyncHandler(async (req, res) => {
   

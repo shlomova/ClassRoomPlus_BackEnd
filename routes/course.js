@@ -13,6 +13,9 @@ router.route('/:_id')
     .put(authControllers.protect, authControllers.restrictTo('teacher') ,courseControllers.updateCourse)
     .delete(authControllers.protect, courseControllers.deleteCourse)
 
+router.route('/public/:_id').get(courseControllers.getCourseByID);
+
+
 router.route('/subscribe/:_id')
     .put(authControllers.protect, courseControllers.subscribe)
     .delete(authControllers.protect, courseControllers.subDelete)
