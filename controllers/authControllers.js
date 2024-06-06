@@ -3,6 +3,8 @@ const AppError = require('./../utils/AppError')
 const User = require('./../models/usersModel')
 const {promisify} = require('util')
 const jwt = require('jsonwebtoken')
+const SendMailToUser  = require('./../utils/sendMail')
+ 
 
 const signToken = id => {
     return jwt.sign({id, iat: Date.now()}, process.env.JWT_SECRET, {
@@ -35,7 +37,9 @@ exports.register = asyncHandler(async (req, res, next) => {
     const newUser = await User.create({email, password, confirmPassword, firstName, lastName, phone, role}).catch(err => {
         return next(new AppError(403, 'Email or Phone already exists'))
     })
-    createSendToken(newUser, 201, res)
+    // send mail to verify email
+    SendMailToUser.SendMailToUser(newUser)
+
 })
 
 exports.login = asyncHandler(async (req, res, next) => {

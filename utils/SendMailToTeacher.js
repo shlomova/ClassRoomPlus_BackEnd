@@ -1,7 +1,21 @@
 // approve student
 const asyncHandler = require('express-async-handler');
 const Course = require('../models/coursesModel');
+const User = require('../models/usersModel');
 
+exports.verfieduser = asyncHandler(async (req, res, next) => {
+    const { _Id } = req.params;
+    const user = await User.findById(_Id);
+    console.log(user);
+    
+    await User.updateOne({ _id: _Id }, { $set: { verifi: true } });
+    console.log(user);
+    await user.save();
+    res.status(200).json({
+        status: 'success',
+        message: 'User verified'
+    });
+});
 
 
 
