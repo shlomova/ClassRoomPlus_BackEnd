@@ -1,5 +1,4 @@
 const chatbotData = {
-  
   questions: [
     {
       id: 1,
@@ -29,6 +28,11 @@ const chatbotData = {
         },
         {
           id: 4,
+          text: "Post in a course",
+          url: "/courses/post"
+        },
+        {
+          id: 5,
           text: "Get assistance",
           nextQuestionId: 4
         },
@@ -44,12 +48,22 @@ const chatbotData = {
       text: "What would you like to do?",
       options: [
         {
-          id: 5,
+          id: 6,
           text: "Create a new course",
           url: "/courses/create"
         },
         {
-          id: 6,
+          id: 7,
+          text: "Upload course content",
+          url: "/courses/upload-content"
+        },
+        {
+          id: 8,
+          text: "Delete course content",
+          url: "/courses/delete-content"
+        },
+        {
+          id: 5,
           text: "Get assistance",
           nextQuestionId: 4
         },
@@ -65,17 +79,32 @@ const chatbotData = {
       text: "What kind of assistance do you need?",
       options: [
         {
-          id: 7,
+          id: 11,
           text: "Help with course content",
           url: "/assistance/content"
         },
         {
-          id: 8,
+          id: 12,
           text: "Find a friend in the course",
           url: "/assistance/find-friend"
         },
         {
-          id: 11,
+          id: 13,
+          text: "Upload a file",
+          url: "/assistance/upload-file"
+        },
+        {
+          id: 14,
+          text: "Delete a file",
+          url: "/assistance/delete-file"
+        },
+        {
+          id: 15,
+          text: "Post in a course",
+          url: "/assistance/post"
+        },
+        {
+          id: 16,
           text: "Start over",
           nextQuestionId: 1
         }
@@ -83,6 +112,5 @@ const chatbotData = {
     }
   ]
 };
-
 
 module.exports = chatbotData;

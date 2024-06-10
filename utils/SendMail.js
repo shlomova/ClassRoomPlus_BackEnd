@@ -31,7 +31,7 @@ exports.SendMailToUser = async (user) => {
       <html>
         <body>
           <p>Welcome to our platform, <strong>${user.firstName}</strong>!</p>
-          <a href="http://localhost:5173/Verifi?${user._id}">Click here to login</a>
+          <a href="http://localhost:5173/Verifi?userId=${user._id}">Click here to login</a>
         </body>
       </html>
     `,

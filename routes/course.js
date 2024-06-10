@@ -5,7 +5,7 @@ const router = express.Router()
 
 
 router.route('/')
-    .get(authControllers.protect,courseControllers.getAllCourses)
+    .get(courseControllers.getAllCourses)
     .post(authControllers.protect,authControllers.isByUser, courseControllers.addCourse)
 
 router.route('/:_id')

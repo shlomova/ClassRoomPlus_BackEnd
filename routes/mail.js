@@ -8,7 +8,7 @@ const verfieduser = require('./../utils/sendmailtoteacher')
 
 
 
-router.route('/verfieduser/:_Id').put( verfieduser.verfieduser)
+router.route('/verfieduser/:_Id').put(verfieduser.verfieduser)
 router.route('/approvestudent').put(authControllers.protect, approveStudent.approveStudent)
 
 
