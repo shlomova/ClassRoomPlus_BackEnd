@@ -25,7 +25,7 @@ exports.addCourse = asyncHandler(async (req, res, next) => {
 
 exports.getCourseByID = asyncHandler(async (req, res, next) => {
     const {_id} = req.params
-    const courses = await Course.findOne(_id)
+    const courses = await Course.findOne({_id: _id})
     res.status(200).json({
         status: 'success',
         courses
