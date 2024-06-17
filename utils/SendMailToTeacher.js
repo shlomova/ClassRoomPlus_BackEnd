@@ -4,6 +4,7 @@ const Course = require('../models/coursesModel');
 const User = require('../models/usersModel');
 
 exports.verfieduser = asyncHandler(async (req, res, next) => {
+    console.log(req.params);
     const { _Id } = req.params;
     const user = await User.findById(_Id);
     console.log(user);

@@ -3,7 +3,7 @@ const { getQuestion, handleResponse } = require('./chatControllers');
 
 const router = express.Router();
 
-router.get('/question/:id', getQuestion);
-router.post('/response', handleResponse);
+router.get('/question/:page/:id', getQuestion);
+router.get('/response', handleResponse);
 
 module.exports = router;

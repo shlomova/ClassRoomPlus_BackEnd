@@ -37,6 +37,7 @@ exports.register = asyncHandler(async (req, res, next) => {
     const newUser = await User.create({email, password, confirmPassword, firstName, lastName, phone, role}).catch(err => {
         return next(new AppError(403, 'Email or Phone already exists'))
     })
+console.log(newUser)
     // send mail to verify email
     SendMailToUser.SendMailToUser(newUser)
 
@@ -66,6 +67,7 @@ const protect = asyncHandler(async (req, res, next) => {
 exports.restrictTo = (...role) => {
     return async (req, res, next) => {
         if (!role.includes(req.user.role)) {
+            
             return next(
                 new AppError(403, 'You do not have permission to perform this action')
             );

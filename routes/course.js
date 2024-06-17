@@ -13,7 +13,8 @@ router.route('/:_id')
     .put(authControllers.protect,authControllers.isByUser, authControllers.restrictTo('teacher') ,courseControllers.updateCourse)
     .delete(authControllers.protect,authControllers.restrictTo('teacher'),  courseControllers.deleteCourse)
 
-router.route('/public/:_id').get(courseControllers.getCourseByID);
+// router.route('/isuserInCourse/')
+//     .get(authControllers.protect,authControllers.isByUser, courseControllers.isUserInCourse)
 
 
 router.route('/subscribe/:_id')

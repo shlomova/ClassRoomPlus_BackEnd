@@ -36,6 +36,17 @@ exports.getCourseByID = asyncHandler(async (req, res, next) => {
     })
 })
 
+exports.UserInCourses = asyncHandler(async (req, res, next) => {
+    const { _id } = req.params
+    const courses = await Course.find({ 'subscription.userId': _id })
+    res.status(200).json({
+        status: 'success',
+        courses
+    })
+})
+
+
+
 
 
 
@@ -91,6 +102,7 @@ exports.subscribe = asyncHandler(async (req, res, next) => {
             message: 'You are already subscribed to this course'
         });
         return
+        
     }
     if (req.user.role === 'teacher') {
         _Id = req.body.userId;
@@ -121,6 +133,7 @@ exports.subscribe = asyncHandler(async (req, res, next) => {
 exports.subDelete = asyncHandler(async (req, res, next) => {
     const { _id} = req.params;
     let userId = req.user._id;
+    console.log(req)
     if (req.user.role === 'teacher') {
         userId = req.body.userId;
     }

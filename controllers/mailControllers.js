@@ -3,6 +3,9 @@ const asyncHandler = require('express-async-handler');
 const User = require('../models/usersModel');
 const Course = require('../models/coursesModel');
 
+
+
+
 exports.SendMailToTeacher = asyncHandler(async (req, res, next) => {
   try {
     const { _id } = req.params;
@@ -69,6 +72,6 @@ exports.SendMailToTeacher = asyncHandler(async (req, res, next) => {
     });
   } catch (error) {
     console.error('Error in SendMailToTeacher:', error);
-    next(error);
+  
   }
 });
