@@ -10,7 +10,7 @@ router.post('/', authControllers.protect,
   upload.array('files'),
   createPost);
 
-router.get('/course/:courseId', authControllers.protect, authControllers.isByUser, getPostsByCourse);
+router.get('/course/:courseId', authControllers.protect, getPostsByCourse);
 
 router.delete('/:postId', authControllers.protect, authControllers.isByUser, deletePost);
 

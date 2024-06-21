@@ -11,7 +11,10 @@ const fileSchema = new mongoose.Schema({
         ref: 'Course',
         required: true
     },
-    file: String
+    file: {
+        type: String,
+        required: true
+    }
 })
 fileSchema.pre("save", function (next) {
     this.date = Date.now();

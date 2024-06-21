@@ -32,12 +32,13 @@ const createSendToken = (user, statusCode, res) => {
     });
 };
 exports.register = asyncHandler(async (req, res, next) => {
+    console.log(req.body)
     const {email, password, confirmPassword, firstName, lastName, phone, role} = req.body
     if (!email || !password || !confirmPassword || !firstName || !lastName || !phone || !role) return next(new AppError(403, 'Request details are missing'))
     const newUser = await User.create({email, password, confirmPassword, firstName, lastName, phone, role}).catch(err => {
         return next(new AppError(403, 'Email or Phone already exists'))
     })
-console.log(newUser)
+    console.log( 111,newUser)
     // send mail to verify email
     SendMailToUser.SendMailToUser(newUser)
 

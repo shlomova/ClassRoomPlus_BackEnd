@@ -11,11 +11,11 @@ const router = express.Router()
 // router.route('/')
 
 router.route('/course/:courseId')
-    .post(authControllers.protect,authControllers.isByUser, upload.single('file'), createFileInCourse)
-    .get( authControllers.protect,authControllers.restrictTo('admin'), getFilesByCourse)
+    .post(authControllers.protect, upload.single('file'), createFileInCourse)
+    .get( authControllers.protect, getFilesByCourse)
 
 router.route('/:fileId')
-    .get(authControllers.protect,authControllers.isByUser, getFile)
-    .delete(authControllers.protect,authControllers.isByUser, deleteFile)
+    .get(authControllers.protect, getFile)
+    .delete(authControllers.protect, deleteFile)
 
 module.exports = router

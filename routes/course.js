@@ -1,12 +1,17 @@
 const express = require('express')
 const authControllers = require('./../controllers/authControllers')
 const courseControllers = require('./../controllers/courseController')
+
 const router = express.Router()
 
 
 router.route('/')
     .get(courseControllers.getAllCourses)
     .post(authControllers.protect,authControllers.isByUser, courseControllers.addCourse)
+
+
+router.route('/byUser')
+    .get(authControllers.protect, courseControllers.UserInCourses)
 
 router.route('/:_id')
     .get(authControllers.protect,courseControllers.getCourseByID)

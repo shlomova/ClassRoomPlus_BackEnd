@@ -35,15 +35,17 @@ exports.getCourseByID = asyncHandler(async (req, res, next) => {
         course
     })
 })
-
+// need to find the courses that the user is subscribed to and return them
 exports.UserInCourses = asyncHandler(async (req, res, next) => {
-    const { _id } = req.params
-    const courses = await Course.find({ 'subscription.userId': _id })
+    console.log (req.user)
+    const userscourses = await Course.find({ subscription: { $elemMatch: { userId: req.user._id } } })
+    console.log (userscourses)  
     res.status(200).json({
         status: 'success',
-        courses
+        userscourses
     })
 })
+
 
 
 
