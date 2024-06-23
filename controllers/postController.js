@@ -6,8 +6,8 @@ const fs = require('fs');
 
 // Create a new post
 const createPost = asyncHandler(async (req, res, next) => {
-    let {courseId, postData} = req.body;
-    let userId = req.user._id;
+    console.log(req.body);
+    let {courseId,userId, postData} = req.body;
     let course = await Course.findById(courseId);
     if (!course) {
         return next(new AppError(404, 'Course not found'));
