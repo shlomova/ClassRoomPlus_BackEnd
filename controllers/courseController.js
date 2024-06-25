@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Course = require("../models/coursesModel");
 const User = require("../models/usersModel")
 const Post = require("../models/postModel")
+const File = require("../models/filemodels.js")
 const SendMailToTeacher = require("./mailControllers.js")
 exports.getAllCourses = asyncHandler(async (req, res, next) => {
     const courses = await Course.find()
@@ -11,25 +12,28 @@ exports.getAllCourses = asyncHandler(async (req, res, next) => {
     })
 })
 
+
 exports.addCourse = asyncHandler(async (req, res, next) => {
     const courseData = req.body;
-
     // Create a new course directly using Course.create()
     const newCourse = await Course.create(courseData);
-
 
     res.status(201).json({
         status: 'success',
         course: newCourse
+    
     });
 });
+   
+   
+
 
 exports.getCourseByID = asyncHandler(async (req, res, next) => {
     const { _id } = req.params
-    console.log(req.user)
+  
     const course = await Course.findById(_id)
     .populate('subscription.userId','firstName lastName')
-    console.log(course)
+    
     res.status(200).json({
         status: 'success',
         course
@@ -37,9 +41,14 @@ exports.getCourseByID = asyncHandler(async (req, res, next) => {
 })
 // need to find the courses that the user is subscribed to and return them
 exports.UserInCourses = asyncHandler(async (req, res, next) => {
-    console.log (req.user)
-    const userscourses = await Course.find({ subscription: { $elemMatch: { userId: req.user._id } } })
-    console.log (userscourses)  
+   
+    const userscourses = await Course.find({ subscription: { $elemMatch: { userId: req.user._id } } }) 
+    if (!userscourses) {
+        return res.status(404).json({
+            status: 'fail',
+            message: 'You are not subscribed to any course'
+        })
+    }
     res.status(200).json({
         status: 'success',
         userscourses
@@ -135,7 +144,7 @@ exports.subscribe = asyncHandler(async (req, res, next) => {
 exports.subDelete = asyncHandler(async (req, res, next) => {
     const { _id} = req.params;
     let userId = req.user._id;
-    console.log(req)
+   
     if (req.user.role === 'teacher') {
         userId = req.body.userId;
     }

@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 const User = require("../models/usersModel");
 const courseSchema = new mongoose.Schema({
+    courseimg: {
+        type: String,
+        ref : 'File'
+
+    },
     courseId: {
         type: mongoose.Schema.ObjectId,
     },
@@ -66,6 +71,7 @@ courseSchema.pre("save", async function (next) {
         console.error("Error updating user course:", error);
     }
 });
+
 
 courseSchema.pre("save", async function (next) {
     try {

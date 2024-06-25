@@ -1,26 +1,32 @@
+const express = require('express');
+const multer = require('multer');
+const router = express.Router();
 const Post = require('../models/postModel');
 const Course = require('../models/coursesModel');
 const asyncHandler = require('express-async-handler');
 const AppError = require('./../utils/AppError');
-const fs = require('fs');
 
-// Create a new post
+const upload = multer({ dest: 'uploads/' });
+
 const createPost = asyncHandler(async (req, res, next) => {
-    console.log(req.body);
-    let {courseId,userId, postData} = req.body;
+    let { courseId, userId, postData } = req.body;
     let course = await Course.findById(courseId);
     if (!course) {
         return next(new AppError(404, 'Course not found'));
     }
+
     const subscription = course.subscription.find(sub => sub.userId.toString() === userId.toString());
     if (!subscription) {
         return next(new AppError(403, 'You are not in this course'));
     }
-    if (subscription.role === 'teacher')
-        userId = null;
+
+    // if (subscription.role === 'teacher')
+    //     userId = null;
+
     let postFiles = null;
     if (req.files)
         postFiles = req.files.map(file => file.path);
+
     const post = await Post.create({
         userId,
         courseId,
@@ -29,13 +35,15 @@ const createPost = asyncHandler(async (req, res, next) => {
     });
 
     if (userId === null)
-        await Course.findByIdAndUpdate(courseId, {$push: {contents: post._id}}, {new: true})
+        await Course.findByIdAndUpdate(courseId, { $push: { contents: post._id } }, { new: true });
 
     res.status(201).json({
         status: 'success',
         post
     });
-});
+})
+
+module.exports = router;
 
 // get all posts by a user
 const getPostsByUser = asyncHandler(async (req, res) => {

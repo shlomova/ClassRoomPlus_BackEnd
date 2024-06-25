@@ -13,14 +13,12 @@ const admonRouter = require('./routes/admon.js')
 const chatbotRoutes = require('./servises/chatroute.js')
 const app = express();
 
-app.use(cors({
-  origin: true,
-  credentials: true
-}))
+
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
-app.use('/admon', admonRouter)
+app.use('/admin', admonRouter)
 app.use('/mail', mailRouter)
 app.use('/users', usersRouter);
 app.use('/posts', postRouter);

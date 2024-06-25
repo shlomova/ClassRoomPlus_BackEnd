@@ -12,7 +12,6 @@ exports.SendMailToTeacher = asyncHandler(async (req, res, next) => {
     const course = await Course.findById(_id);
     const student = await User.findById(req.user._id);
     const teacher = await User.findById(course.userId);
-    console.log(course.id ,student.id,);
 
     if (!course || !student || !teacher) {
       return res.status(404).json({

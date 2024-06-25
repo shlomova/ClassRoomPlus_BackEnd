@@ -12,6 +12,6 @@ router.post('/', authControllers.protect,
 
 router.get('/course/:courseId', authControllers.protect, getPostsByCourse);
 
-router.delete('/:postId', authControllers.protect, authControllers.isByUser, deletePost);
+router.delete('/:postId', authControllers.protect, deletePost);
 
 module.exports = router;

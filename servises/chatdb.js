@@ -27,8 +27,8 @@ const chatbotData = {
           options: [
             {
               id: 1,
-              text: "subscribe to a course",
-              url: "http://localhost:5173/App"
+              text: "see your courses",
+              url: "/courses"
             },
 
             {
@@ -51,7 +51,7 @@ const chatbotData = {
               id: 1,
               text: "about a course",
               // on click will take you to a component that will display the course details
-              url: "/courses/:id"
+              url: "/about"
             },
             {
               id: 2,
@@ -75,7 +75,7 @@ const chatbotData = {
             {
               id: 1,
               text: "Courses that you are subscribed to",
-              url: "/dashboard/my-courses"
+              url: "/App"
             },
 
             {
@@ -129,12 +129,12 @@ const chatbotData = {
             {
               id: 1,
               text: "View my courses",
-              url: "/dashboard/my-courses"
+              url: "/App"
             },
             {
               id: 2,
               text: "Go to homepage",
-              url: "/home"
+              url: "/dashboard"
             },
             {
               id: 3,
@@ -154,12 +154,12 @@ const chatbotData = {
             {
               id: 1,
               text: "Add a course",
-              url: "/courses/add"
+              url: "/add-course"
             },
             {
               id: 2,
               text: "Subscribe to a course",
-              url: "/courses/subscribe"
+              url: "/subscribe"
             },
             {
               id: 3,
@@ -236,7 +236,32 @@ const chatbotData = {
           ]
         }
       ]
-    }
+    },
+    contentsClass: {
+      questions: [
+        {
+          id: 1,
+          text: "What would you like to do?",
+          options: [
+            {
+              id: 1,
+              text: "Post a post",
+              url: "/course/:id/post"
+            },
+            {
+              id: 2,
+              text: "Delete a post",
+              url: "/course/:id/delete-post"
+            },
+            {
+              id: 3,
+              text: "Start over",
+              nextQuestionId: 1
+            }
+          ]
+        }
+      ]
+    },
     // Add other pages and their respective questions...
 
 

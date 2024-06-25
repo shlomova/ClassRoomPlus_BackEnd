@@ -5,7 +5,7 @@ const fs = require('fs')
 // it needs to also have the couseid so that we can get the files by course
 exports.createFileInCourse = asyncHandler(async (req, res, next) => {
     const {courseId} = req.params
-    console.log(req);
+   
     const file = await File.create({
         courseId,
         file: req.file.path
@@ -26,6 +26,7 @@ exports.getFilesByCourse = (async (req, res, next) => {
     
 }
 );
+
 
    
 
@@ -54,7 +55,7 @@ exports.deleteFile = (async (req, res, next) => {
     })
     await file.deleteOne()
 
-    console.log(file.file);
+  
     res.json({
         status: 'success',
         message: 'File deleted'
