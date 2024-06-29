@@ -1,11 +1,10 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const fileSchema = new mongoose.Schema({
     date: {
         type: Date,
-        default: Date.now()
+        default: Date.now
     },
-    // two-way
     courseId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course',
@@ -15,13 +14,8 @@ const fileSchema = new mongoose.Schema({
         type: String,
         required: true
     }
-})
-fileSchema.pre("save", function (next) {
-    this.date = Date.now();
-    next();
-    }
-);
-const File = mongoose.model('File', fileSchema)
+});
 
-module.exports = File
+const File = mongoose.model('File', fileSchema);
 
+module.exports = File;

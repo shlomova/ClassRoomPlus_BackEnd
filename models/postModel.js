@@ -5,7 +5,7 @@ const postSchema = new mongoose.Schema({
   courseId: { type: mongoose.Schema.Types.ObjectId, ref: "Course", required: [true, "Must have a valid classid"] },
   postData: {
     type: String,
-    required: true,
+    default: '',  // This allows empty strings
   },
   postFiles: [{ type: String }],
   createdAt: { type: Date, default: Date.now }

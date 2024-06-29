@@ -1,10 +1,23 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const User = require("../models/usersModel");
+
+const subscriptionSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    role: {
+        type: String,
+        enum: ['teacher', 'student'],
+        required: true
+    }
+});
+
 const courseSchema = new mongoose.Schema({
     courseimg: {
         type: String,
-        ref : 'File'
-
+        ref: 'File'
     },
     courseId: {
         type: mongoose.Schema.ObjectId,
@@ -27,68 +40,35 @@ const courseSchema = new mongoose.Schema({
     price: {
         type: Number
     },
-    // two-way
-    subscription: {
-        type: Array,
-        userId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: true,
-        },
-        role: {
-            type: String,
-            value: ['teacher', 'student'],
-        }
-    },
-    contents: {
-        type: Array,
-        posts: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Post",
-        },
-    },
-    userId: {type: String},
-
-})
+    subscription: [subscriptionSchema],
+    contents: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'File'
+    }],
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
+});
 
 courseSchema.pre("save", function (next) {
-  this.id = String(this._id);
-  next();
+    this.id = String(this._id);
+    next();
 });
 
 courseSchema.pre("save", async function (next) {
-    this.subscription = {userId: this.userId, role: 'teacher'}
+    if (!this.isModified('userId')) return next();
+    
     try {
         const filter = {_id: this.userId};
-        const update = {courses: this._id};
-        const user = await User.findOneAndUpdate(
-            filter,
-            {$push: update},
-            undefined
-        );
-        // console.log(user)
+        const update = {$push: {courses: this._id}};
+        await User.findOneAndUpdate(filter, update);
     } catch (error) {
         console.error("Error updating user course:", error);
     }
+    next();
 });
 
+const Course = mongoose.model('Course', courseSchema);
 
-courseSchema.pre("save", async function (next) {
-    try {
-        const filter = {_id: this.userId};
-        const update = {courses: this._id};
-        const user = await User.findOneAndUpdate(
-            filter,
-            {$push: update},
-            undefined
-        );
-        // console.log(user)
-    } catch (error) {
-        console.error("Error updating user course:", error);
-    }
-}   );
-
-
-const course = mongoose.model('Course', courseSchema)
-
-module.exports = course
+module.exports = Course;

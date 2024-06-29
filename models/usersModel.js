@@ -5,6 +5,10 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:[true, 'The user must have a name']
     }, 
+    avatar: {
+        type: String,
+        default: `https://ui-avatars.com/api/?name=John+Doe&background=random&size=200&rounded=true`
+    },
     lastName: {
         type:String,
         required:[true, 'The user must have a name']

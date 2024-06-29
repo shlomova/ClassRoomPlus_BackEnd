@@ -28,17 +28,21 @@ exports.addCourse = asyncHandler(async (req, res, next) => {
    
 
 
+
 exports.getCourseByID = asyncHandler(async (req, res, next) => {
-    const { _id } = req.params
+    const { _id } = req.params;
   
     const course = await Course.findById(_id)
-    .populate('subscription.userId','firstName lastName')
-    
+        .populate('subscription.userId', 'firstName lastName')
+        .populate('contents', 'file');
+  
+    console.log(course);
+  
     res.status(200).json({
         status: 'success',
         course
-    })
-})
+    });
+});
 // need to find the courses that the user is subscribed to and return them
 exports.UserInCourses = asyncHandler(async (req, res, next) => {
    
@@ -78,12 +82,12 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
     // let role = req.user.role
     const course = await Course.findById(_id)
     const subscription = course.subscription.find(sub => sub.userId === req.user._id.toString());
-    if (course.subscription.role !== 'teacher') {
-        res.status(403).json({
-            status: 'fail',
-            message: 'You are not authorized to delete this course'
-        })
-    }
+    // if (course.subscription.role !== 'teacher') {
+    //     res.status(403).json({
+    //         status: 'fail',
+    //         message: 'You are not authorized to delete this course'
+    //     })
+    // }
     await Course.findByIdAndDelete(_id)
     await Post.find({courseId: _id}).deleteMany()
 

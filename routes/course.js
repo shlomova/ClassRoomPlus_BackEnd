@@ -19,8 +19,8 @@ router.route('/byUser')
 
 router.route('/:_id')
     .get(authControllers.protect,courseControllers.getCourseByID)
-    .put(authControllers.protect, authControllers.restrictTo('teacher') ,courseControllers.updateCourse)
-    .delete(authControllers.protect,authControllers.restrictTo('teacher'),  courseControllers.deleteCourse)
+    .put(authControllers.protect ,courseControllers.updateCourse)
+    .delete(authControllers.protect,  courseControllers.deleteCourse)
 
 // router.route('/isuserInCourse/')
 //     .get(authControllers.protect,authControllers.isByUser, courseControllers.isUserInCourse)
