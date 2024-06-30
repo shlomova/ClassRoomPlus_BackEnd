@@ -27,6 +27,6 @@ router.route('/:_id')
 
 
 router.route('/subscribe/:_id')
-    .put(authControllers.protect,authControllers.isByUser, courseControllers.subscribe)
-    .delete(authControllers.protect,authControllers.isByUser, courseControllers.subDelete)
+    .put(authControllers.protect, courseControllers.subscribe)
+    .delete(authControllers.protect, courseControllers.subDelete)
 module.exports = router

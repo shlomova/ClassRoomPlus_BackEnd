@@ -43,21 +43,18 @@ exports.getCourseByID = asyncHandler(async (req, res, next) => {
         course
     });
 });
-// need to find the courses that the user is subscribed to and return them
+// need to find the courses that the user is subscribed to user.courses[] = course._id and then find the course using the course._id
+// then populate the course with the user's details
+// then return the courses
+
 exports.UserInCourses = asyncHandler(async (req, res, next) => {
-   
-    const userscourses = await Course.find({ subscription: { $elemMatch: { userId: req.user._id } } }) 
-    if (!userscourses) {
-        return res.status(404).json({
-            status: 'fail',
-            message: 'You are not subscribed to any course'
-        })
-    }
+    const userscourses = await Course.find({ _id: { $in: req.user.courses } })
     res.status(200).json({
         status: 'success',
         userscourses
-    })
-})
+    });
+});
+
 
 
 
@@ -68,6 +65,7 @@ exports.UserInCourses = asyncHandler(async (req, res, next) => {
 
 
 exports.updateCourse = asyncHandler(async (req, res, next) => {
+    console.log(req.body, req.params)
     const { _id } = req.params
     const updatedDetails = req.body
     const updatedCourse = await Course.findByIdAndUpdate(_id, updatedDetails, { new: true })
@@ -106,11 +104,10 @@ const updateCourseAndUser = async (courseId, userId, courseUpdate, userUpdate) =
 };
 
 exports.subscribe = asyncHandler(async (req, res, next) => {
-    const { _id: courseId } = req.params;
+    const { _id: courseid } = req.params;
+    console.log(req.user)
     let userId = req.user._id;
-
-    const isExist = req.user.courses.findIndex(courseId => courseId.toString() == courseId)
-
+    const isExist = req.user.courses.findIndex(courseId => courseId.toString() == courseid)
     if (isExist !== -1) {
         res.status(403).json({
             status: 'fail',
@@ -122,7 +119,7 @@ exports.subscribe = asyncHandler(async (req, res, next) => {
     if (req.user.role === 'teacher') {
         _Id = req.body.userId;
     }
-    const course = await Course.findById(courseId);
+    const course = await Course.findById(courseid);
     // console.log({
     //     // subscriptionIndex,
     //     course   });
@@ -132,9 +129,9 @@ exports.subscribe = asyncHandler(async (req, res, next) => {
     }
     const courseUpdate = { $addToSet: { subscription: { userId: userId.toString(), role: null } } }
 
-    const userUpdate = { $push: { courses: courseId } };
+    const userUpdate = { $push: { courses: courseid } };
 
-    const { course: updatedCourse, user } = await updateCourseAndUser(courseId, userId, courseUpdate, userUpdate);
+    const { course: updatedCourse, user } = await updateCourseAndUser(courseid, userId, courseUpdate, userUpdate);
     
     SendMailToTeacher.SendMailToTeacher(req, res)
 

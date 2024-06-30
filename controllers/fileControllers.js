@@ -12,8 +12,6 @@ exports.createFileInCourse = asyncHandler(async (req, res, next) => {
     courseId,
     file: req.file.filename
   });
-
-  // עדכון הקורס עם מזהה הקובץ החדש
   await Course.findByIdAndUpdate(courseId, {
     $push: { contents: file._id }
   });
@@ -25,7 +23,7 @@ exports.createFileInCourse = asyncHandler(async (req, res, next) => {
 });
 
 
-exports.getFilesByCourse = (async (req, res, next) => {
+exports.getFilesByCourse = asyncHandler(async (req, res, next) => {
     const { courseId } = req.params
     const files = await File.find({ courseId : courseId})
     console.log(222,courseId)
@@ -41,7 +39,7 @@ exports.getFilesByCourse = (async (req, res, next) => {
 
    
 
-exports.getFile = (async (req, res, next) => {
+exports.getFile = asyncHandler(async (req, res, next) => {
     const { fileId } = req.params
     const file = await File.findById(fileId)
     res.json({
@@ -54,8 +52,11 @@ exports.getFile = (async (req, res, next) => {
 
 
 exports.deleteFile = asyncHandler(async (req, res, next) => {
+
     const { fileId } = req.params;
-    const file = await File.findById(fileId);
+  
+    const file = await File.findById(fileId)
+  
   
     if (!file) {
       return next(new AppError(404, 'File not existent'));
