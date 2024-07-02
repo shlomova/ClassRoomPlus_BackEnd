@@ -12,7 +12,7 @@ const router = express.Router()
 
 router.route('/course/:courseId')
     .post(authControllers.protect, upload.single('file'), createFileInCourse)
-    .get( authControllers.protect,authControllers.restrictTo('admin'), getFilesByCourse)
+    .get( authControllers.protect, getFilesByCourse)
 
 router.route('/:fileId')
     .get(authControllers.protect, getFile)

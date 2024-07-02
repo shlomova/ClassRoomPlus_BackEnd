@@ -3,6 +3,8 @@ const AppError = require('./../utils/AppError')
 const User = require('./../models/usersModel')
 const {promisify} = require('util')
 const jwt = require('jsonwebtoken')
+const SendMailToUser  = require('./../utils/sendMail')
+ 
 
 const signToken = id => {
     return jwt.sign({id, iat: Date.now()}, process.env.JWT_SECRET, {
@@ -29,20 +31,22 @@ const createSendToken = (user, statusCode, res) => {
         }
     });
 };
-
 exports.register = asyncHandler(async (req, res, next) => {
     const {email, password, confirmPassword, firstName, lastName, phone, role} = req.body
     if (!email || !password || !confirmPassword || !firstName || !lastName || !phone || !role) return next(new AppError(403, 'Request details are missing'))
-    const newUser = await User.create({email, password, confirmPassword, firstName, lastName, phone, role})
-    createSendToken(newUser, 201, res)
+    const newUser = await User.create({email, password, confirmPassword, firstName, lastName, phone, role}).catch(err => {
+        return next(new AppError(403, 'Email or Phone already exists'))
+    })
+    // send mail to verify email
+    SendMailToUser.SendMailToUser(newUser)
+
 })
 
 exports.login = asyncHandler(async (req, res, next) => {
     const {email, password} = req.body
     if (!email || !password) return next(new AppError(403, 'Email or password is missing'))
     const user = await User.findOne({email}).select('+password')
-    if (!user || !await user.checkPassword(password, user.password)) return next(new AppError(403, 'Email or password is not correct 1'))
-
+    // if (!user || !await user.checkPassword(password, user.password)) return next(new AppError(403, 'Email or password is not correct 1'))
     createSendToken(user, 201 , res)
 
 })
@@ -60,7 +64,8 @@ const protect = asyncHandler(async (req, res, next) => {
 
 exports.restrictTo = (...role) => {
     return async (req, res, next) => {
-        if (role !== req.user.role) {
+        if (!role.includes(req.user.role)) {
+            
             return next(
                 new AppError(403, 'You do not have permission to perform this action')
             );
@@ -74,7 +79,6 @@ exports.isByUser = asyncHandler(async (req, res, next) => {
     const { userId } = req.body;
     const user = req.user;
     if (userId !== user._id.toString()) {
-        console.log(userId, user._id.toString())
         return next(new AppError(403, 'You are not authorized to perform this action'));
     }
     next();

@@ -1,17 +1,15 @@
 const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId,  ref: "User", required: [true, "Must have a valid userid"] },
-  courseId: { type: mongoose.Schema.Types.ObjectId,  ref: "Course", required: [true, "Must have a valid classid"] },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  courseId: { type: mongoose.Schema.Types.ObjectId, ref: "Course", required: [true, "Must have a valid classid"] },
   postData: {
     type: String,
-    required: true,
+    default: '',  // This allows empty strings
   },
-  dataType: { type: String, enum: ['string', 'emoji', 'file'], required: true },
+  postFiles: [{ type: String }],
   createdAt: { type: Date, default: Date.now }
 });
-
-
 
 const Post = mongoose.model('Post', postSchema);
 

@@ -5,6 +5,10 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:[true, 'The user must have a name']
     }, 
+    avatar: {
+        type: String,
+        default: `https://ui-avatars.com/api/?name=John+Doe&background=random&size=200&rounded=true`
+    },
     lastName: {
         type:String,
         required:[true, 'The user must have a name']
@@ -49,7 +53,12 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course'
     },
-],
+   ],
+   verifi:{
+    type: Boolean,
+    default: false
+
+}
 })
 //document middleware - runs b4 actual document is saved in the db "THIS REFERS TO A CURRENT DOCUMENT"
 userSchema.pre('save', async function(next){
