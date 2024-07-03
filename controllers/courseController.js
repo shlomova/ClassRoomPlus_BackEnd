@@ -33,7 +33,7 @@ exports.getCourseByID = asyncHandler(async (req, res, next) => {
     const { _id } = req.params;
   
     const course = await Course.findById(_id)
-        .populate('subscription.userId', 'firstName lastName')
+        .populate('subscription.userId', 'firstName lastName avatar')
         .populate('contents', 'file');
   
     console.log(course);
